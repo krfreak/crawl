@@ -10,12 +10,12 @@
 
 #include "ui.h"
 #include "cio.h"
+#include "state.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
 # include "tilebuf.h"
 #else
-# include "state.h"
 # include "output.h"
 # include "view.h"
 # include "stringutil.h"

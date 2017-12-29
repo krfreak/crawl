@@ -25,6 +25,7 @@
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
+#include "scroller.h"
 #include "sound.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1980,7 +1981,7 @@ void load_messages(reader& inf)
 
 void replay_messages()
 {
-    formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
+    formatted_scroller hist(FS_START_AT_END | FS_PREWRAPPED_TEXT);
     hist.set_more();
 
     const store_t msgs = buffer.get_store();
@@ -2002,9 +2003,13 @@ void replay_messages()
                 }
                 line.add_glyph(_prefix_glyph(p));
                 line += parts[j];
-                hist.add_item_formatted_string(line);
+                hist.add_formatted_string(line, true);
             }
         }
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
 
     hist.show();
 }
