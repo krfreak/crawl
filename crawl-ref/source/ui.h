@@ -487,7 +487,7 @@ protected:
 
 void ui_push_layout(shared_ptr<UI> root, KeymapContext km = KMC_DEFAULT);
 void ui_pop_layout();
-void ui_pump_events();
+void ui_pump_events(int wait_event_timeout = INT_MAX);
 void ui_run_layout(shared_ptr<UI> root, const bool& done);
 int ui_getch(KeymapContext km = KMC_DEFAULT);
 
