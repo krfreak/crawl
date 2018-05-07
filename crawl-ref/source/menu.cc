@@ -940,6 +940,12 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 #endif
     cursor_control cs(false);
 
+    if (is_set(MF_SWAP_MODE))
+    {
+        reuse_selections = false;
+        swap_mode = true;
+    }
+
     if (reuse_selections)
         get_selected(&sel);
     else
@@ -1088,6 +1094,9 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
 bool Menu::process_key(int keyin)
 {
     if (process_item_swap_key(keyin))
+        // exit menu if done swapping
+        return !is_set(MF_SWAP_MODE) || swap_mode;
+    else if (is_set(MF_SWAP_MODE))
         return true;
 
     if (items.empty())
