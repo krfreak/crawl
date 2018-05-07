@@ -131,8 +131,7 @@ int formatted_scroller::show()
             return true;
         if (vbox->on_event(ev))
             return true;
-        done = m_flags & FS_EASY_EXIT;
-        return done;
+        return false;
     });
 
     if (m_flags & FS_START_AT_END)
