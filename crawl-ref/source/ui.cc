@@ -1234,3 +1234,12 @@ void ui_pump_events()
     }
 #endif
 }
+
+
+void ui_run_layout(shared_ptr<UI> root, const bool& done)
+{
+    ui_push_layout(root);
+    while (!done && !crawl_state.seen_hups)
+        ui_pump_events();
+    ui_pop_layout();
+}

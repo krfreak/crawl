@@ -467,6 +467,7 @@ protected:
 void ui_push_layout(shared_ptr<UI> root);
 void ui_pop_layout();
 void ui_pump_events();
+void ui_run_layout(shared_ptr<UI> root, const bool& done);
 
 void ui_push_scissor(i4 scissor);
 void ui_pop_scissor();
