@@ -1123,7 +1123,7 @@ void describe_god(god_type which_god)
     _send_god_ui(which_god);
 #endif
 
-    ui_run_layout(move(popup), done);
+    ui_run_layout(popup, done);
 
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
@@ -1264,7 +1264,7 @@ update_ui:
     _send_god_ui(which_god);
 #endif
 
-    ui_run_layout(move(popup), done);
+    ui_run_layout(popup, done);
 
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
