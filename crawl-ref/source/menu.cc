@@ -351,7 +351,7 @@ static bool _has_hotkey_prefix(const string &s)
     // [enne] - Ugh, hack. Maybe MenuEntry could specify the
     // presence and length of this substring?
     bool let = (s[1] >= 'a' && s[1] <= 'z' || s[1] >= 'A' && s[1] <= 'Z');
-    bool plus = (s[3] == '-' || s[3] == '+');
+    bool plus = (s[3] == '-' || s[3] == '+' || s[3] == '#');
     return let && plus && s[0] == ' ' && s[2] == ' ' && s[4] == ' ';
 }
 
@@ -367,6 +367,9 @@ void UIMenu::do_layout(int mw, int mh)
     int row_height = 0;
     int height = -entry_buffer;
 
+    vector<short> row_heights;
+    row_heights.reserve(m_menu->items.size());
+
     for (size_t i = 0; i < m_menu->items.size(); ++i)
     {
         auto& entry = item_info[i];
@@ -376,12 +379,14 @@ void UIMenu::do_layout(int mw, int mh)
         if (column == 0)
         {
             height += row_height + entry_buffer;
+            row_heights.push_back(row_height);
             row_height = 0;
         }
 
         const int text_width = m_font_entry->string_width(entry.text);
 
         entry.y = height;
+        entry.column = column;
 
         if (entry.heading)
         {
@@ -389,16 +394,15 @@ void UIMenu::do_layout(int mw, int mh)
             // extra space here is used for divider line and padding; note that
             // we only want top padding if we're not the first item, since the
             // popup and the more already have padding.
-            entry.h = text_height + (i == 0 ? 5 : 10);
+            row_height = text_height + (i == 0 ? 5 : 10);
 
             // wrap titles to two lines if they don't fit
             if (m_draw_tiles && text_width > mw)
             {
                 formatted_string split = m_font_entry->split(entry.text, mw, UINT_MAX);
-                entry.h = m_font_entry->string_height(split);
+                row_height = max(row_height, (int)m_font_entry->string_height(split));
             }
 
-            row_height = max(row_height, entry.h);
             column = m_num_columns-1;
         }
         else
@@ -428,17 +432,28 @@ void UIMenu::do_layout(int mw, int mh)
                 int w = max_column_width - text_sx - pad_right;
                 formatted_string split = m_font_entry->split(text, w, UINT_MAX);
                 int string_height = m_font_entry->string_height(split);
+                string_height = min(string_height, text_height*2);
                 item_height = max(item_height, string_height);
             }
 
             column_width = max(column_width, text_sx + text_width + pad_right);
 
-            entry.h = item_height;
-            entry.column = column;
             row_height = max(row_height, item_height);
         }
     }
     height += row_height;
+    row_heights.push_back(row_height);
+
+    {
+        int row = 0;
+        for (size_t i = 0; i < m_menu->items.size(); ++i)
+        {
+            auto& entry = item_info[i];
+            if (entry.column == 0)
+                row++;
+            entry.h = row_heights[row];
+        }
+    }
 
     // Limit page size to ensure <= 52 items visible
     int max_height = INT_MAX;
