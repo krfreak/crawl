@@ -1188,7 +1188,7 @@ bool Menu::process_key(int keyin)
     }
 
     // this is really ugly..
-    if (!swap_mode)
+    if (swap_mode)
         return true;
     if (!movement_key)
     switch (keyin)
