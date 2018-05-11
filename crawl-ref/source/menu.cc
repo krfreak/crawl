@@ -511,7 +511,7 @@ void UIMenu::_render()
     {
         const MenuEntry *me = m_menu->items[i];
         int y = i - vis_item_first + 1;
-        cgotoxy(m_region[0]+1, m_region[1]+1+y);
+        cgotoxy(m_region[0]+1, m_region[1]+title_height+y);
         const int col = m_menu->item_colour(me);
         textcolour(col);
         const bool needs_cursor = (m_menu->get_cursor() == i && m_menu->is_set(MF_MULTISELECT));
